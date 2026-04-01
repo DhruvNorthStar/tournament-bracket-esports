@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Valorant Tournament Bracket</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ───── SETUP ───── -->
+  <div id="setup-screen" class="screen">
+
+    <div class="brand">⟨ VALORANT TOURNAMENT ⟩</div>
+
+    <div class="card">
+      <div class="clabel">Tournament Name</div>
+      <input type="text" id="t-name" placeholder="e.g. VCT Campus Series 2025" maxlength="52" />
+    </div>
+
+    <div class="card">
+      <div class="clabel">Teams <span id="team-badge" class="badge">0 / 8</span></div>
+      <div class="irow">
+        <input type="text" id="team-inp" placeholder="Enter team name..." maxlength="28" />
+        <button class="btn accent" onclick="addTeam()">Add</button>
+      </div>
+      <div id="tags" class="tags"></div>
+      <div id="team-hint" class="hint">Add at least 2 teams.</div>
+      <button class="btn ghost sm" style="margin-top:10px" onclick="loadSamples()">Load sample teams</button>
+    </div>
+
+    <div class="card">
+      <div class="clabel">Bracket Type</div>
+      <div class="opts" id="grp-type">
+        <button class="opt active" data-v="single" onclick="pick('grp-type',this)">Single Elimination</button>
+        <button class="opt" data-v="double" onclick="pick('grp-type',this)">Double Elimination</button>
+      </div>
+      <div id="type-desc" class="hint" style="margin-top:8px">One loss and the team is eliminated.</div>
+    </div>
+
+    <div class="card">
+      <div class="clabel">Match Format (fixed per round)</div>
+      <div class="format-table">
+        <div class="ft-row header">
+          <div>Stage</div><div>Mode</div><div>Format</div><div>Win Condition</div>
+        </div>
+        <div class="ft-row">
+          <div>Starting Rounds</div>
+          <div>Swift Play</div>
+          <div>Best of 1</div>
+          <div>First to 5 · Max 20 min</div>
+        </div>
+        <div class="ft-row">
+          <div>Semi-Finals</div>
+          <div>Standard</div>
+          <div>Best of 1</div>
+          <div>First to 13</div>
+        </div>
+        <div class="ft-row">
+          <div>Finals</div>
+          <div>Standard</div>
+          <div>Best of 3</div>
+          <div>First to 13 per map</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="clabel">Lock Password <span class="hint">(optional — stops others from editing scores)</span></div>
+      <input type="password" id="t-pw" placeholder="Leave blank for no lock..." maxlength="32" />
+    </div>
+
+    <button class="btn accent full" id="start-btn" onclick="startTournament()" disabled>
+      Generate Bracket →
+    </button>
+  </div>
+
+    <button class="btn accent full" id="start-btn" onclick="startTournament()" disabled>
+      Generate Bracket →
+    </button>
+  </div>
+
+  <!-- ───── BRACKET ───── -->
+  <div id="bracket-screen" class="screen wide" style="display:none">
+    <div class="topbar">
+      <div>
+        <div class="brand sm" id="b-name"></div>
+        <div class="hint" id="b-meta"></div>
+      </div>
+      <div class="topbar-right">
+        <span id="lock-badge" style="display:none"></span>
+        <button class="btn ghost sm" onclick="doExport()">⬇ Export Results</button>
+        <button class="btn ghost sm" onclick="goNew()">← New</button>
+      </div>
+    </div>
+    <div id="bracket-root"></div>
+  </div>
+
+  <!-- ───── SCORE MODAL ───── -->
+  <div id="score-modal" class="overlay" style="display:none">
+    <div class="modal">
+      <div class="modal-title" id="sm-title"></div>
+      <div class="modal-stage-info" id="sm-stage"></div>
+      <div id="sm-body"></div>
+      <div class="hint" id="sm-hint" style="margin:10px 0 18px"></div>
+      <div class="mfooter">
+        <button class="btn ghost" onclick="closeScore()">Cancel</button>
+        <button class="btn accent" onclick="confirmScore()">Confirm Result</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── PASSWORD MODAL ───── -->
+  <div id="pw-modal" class="overlay" style="display:none">
+    <div class="modal">
+      <div class="modal-title">Password Required</div>
+      <p class="hint" style="margin-bottom:12px">Enter the password to edit scores.</p>
+      <input type="password" id="pw-inp" placeholder="Password..." />
+      <p id="pw-err" style="color:#e05555;font-size:12px;margin-top:6px;display:none">Incorrect password.</p>
+      <div class="mfooter" style="margin-top:16px">
+        <button class="btn ghost" onclick="closePw()">Cancel</button>
+        <button class="btn accent" onclick="submitPw()">Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── TOAST ───── -->
+  <div id="toast" class="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
